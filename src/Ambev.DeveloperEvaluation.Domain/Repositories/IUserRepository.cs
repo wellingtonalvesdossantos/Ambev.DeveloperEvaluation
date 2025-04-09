@@ -1,4 +1,6 @@
+using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories;
 
@@ -38,4 +40,6 @@ public interface IUserRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if the user was deleted, false if not found</returns>
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+
+    IQueryable<User> GetPaginated(PaginatedSearchBase paginationParams, UserRole[]? roleList, UserStatus[]? statusList);
 }

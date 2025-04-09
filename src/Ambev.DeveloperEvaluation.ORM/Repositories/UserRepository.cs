@@ -1,4 +1,7 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Extensions;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,5 +74,18 @@ public class UserRepository : IUserRepository
         _context.Users.Remove(user);
         await _context.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public IQueryable<User> GetPaginated(PaginatedSearchBase paginationParams, UserRole[]? roleList, UserStatus[]? statusList)
+    {
+        var query = _context.Users.AsQueryable();
+
+        if (roleList != null && roleList.Length > 0)
+            query = query.Where(u => roleList.Contains(u.Role));
+
+        if (statusList != null && statusList.Length > 0)
+            query = query.Where(u => statusList.Contains(u.Status));
+
+        return query;
     }
 }
