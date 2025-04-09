@@ -11,6 +11,5 @@ public class GetUserResponseProfile : Profile
     public GetUserResponseProfile()
     {
         CreateMap<GetUserResult, GetUserResponse>();
-        CreateMap<PaginatedList<GetUserResult>, PaginatedResponse<GetUserResult>>();
     }
 }
