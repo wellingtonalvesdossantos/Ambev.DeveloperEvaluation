@@ -44,7 +44,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
     /// <returns>The shoppingCart if found, null otherwise</returns>
     public async Task<ShoppingCart?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.ShoppingCarts.FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
+        return await _context.ShoppingCarts.Include("Items.Product").FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
     }
 
     /// <summary>
@@ -68,12 +68,12 @@ public class ShoppingCartRepository : IShoppingCartRepository
     {
         var query = _context.ShoppingCarts.AsQueryable();
 
-        //if (roleList != null && roleList.Length > 0)
-        //    query = query.Where(u => roleList.Contains(u.Role));
+        //if (customerList != null && customerList.Length > 0)
+        //    query = query.Where(u => customerList.Contains(u.CustomerId));
 
-        //if (statusList != null && statusList.Length > 0)
-        //    query = query.Where(u => statusList.Contains(u.Status));
+        if (productList != null && productList.Length > 0)
+            query = query.Where(u => u.Items.Any(i => productList.Contains(i.ProductId)));
 
-        return query;
+        return query.Include("Items.Product");
     }
 }
